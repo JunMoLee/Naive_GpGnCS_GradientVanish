@@ -79,6 +79,8 @@ public:
 	int HOnoupdate = 0;
 	int LocationTrack=1;
 	int LocationTrackPeriod=200;
+	int G_Period;
+	int G_L_Period;
 
 	/* Hardware parameters */
 	bool useHardwareInTrainingFF;   // Use hardware in the feed forward part of training or not (true: realistic hardware, false: ideal software)
