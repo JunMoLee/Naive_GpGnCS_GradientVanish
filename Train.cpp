@@ -1583,8 +1583,8 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 	if (  iteration % param ->G_Period == param ->G_Period -1)
 			{	
 
-			/* gradient track*/
-		
+		/* gradient track*/
+		int epoch = int(iteration/8000)+1;
 		// hiddenlayer before s1[j]
 		// hiddenlayer after s1[j] / ( a1[j] * (1 - a1[j])  )
 		// outputlayer before s2[j] 
@@ -1626,7 +1626,7 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 			{	
 
 		/*weight distribution check (completed) */
-		
+		int epoch = int(iteration/8000)+1;
 				int recordidx = iteration / param ->G_L_Period;
 				fstream read;
 				
@@ -1658,8 +1658,8 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 		char str_sparsity[1024];
 		sprintf(str_sparsity, "sparsity_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
 		read_sparsity.open(str_sparsity,fstream::app);
-		IHsparsity = 0;
-		HOsparsity = 0;
+		int IHsparsity = 0;
+		int HOsparsity = 0;
 				
 		for (int j = 0; j  < param->nHide; j++) {
 			for (int k = 0; k < param->nInput; k++) {
