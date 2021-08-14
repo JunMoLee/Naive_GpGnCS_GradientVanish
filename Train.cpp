@@ -1580,9 +1580,225 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 				
 			}	
 			
+	if (  iteration % param ->G_Period == param ->G_Period -1)
+			{	
+
+			/* gradient track*/
+		
+		// hiddenlayer before s1[j]
+		// hiddenlayer after s1[j] / ( a1[j] * (1 - a1[j])  )
+		// outputlayer before s2[j] 
+		// outputlayer after  s2[j] / ( a2[j] * (1 - a2[j])  )
+		// static_cast<RealDevice*>(arrayHO->cell[j][k])->location
+		// weight1[j][k]
+		// weight2[j][k]
+		int recordidx = iteration / param ->G_Period;
+		fstream read1;
+		fstream read2;
+				
+		char str1[1024];
+		sprintf(str1, "gradientIH_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
+		char str2[1024];
+		sprintf(str2, "gradientHO_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
+		
+		read1<<epoch<<", "<<recordidx;
+		read2<<epoch<<", "<<recordidx;
+			for (int j = 0; j  < param->nHide; j++) {
+			read1<< ", "<<s1[j];
+			}
+						
+			for (int j = 0; j  < param->nHide; j++) {
+			read1<< ", "<< s1[j] / ( a1[j] * (1 - a1[j])  );
+			}
+						
+			for (int j = 0; j < param->nOutput; j++) {
+			read2<< ", "<<s2[j];
+			}
+		
+			for (int j = 0; j < param->nOutput; j++) {
+			read2<< ", "<<s2[j] / ( a2[j] * (1 - a2[j])  );
+			}
+		
+		read1<<endl;
+		read2<<endl;
+	}
+			if (  iteration % param ->G_L_Period == param ->G_L_Period -1)
+			{	
+
+		/*weight distribution check (completed) */
+		
+				int recordidx = iteration / param ->G_L_Period;
+				fstream read;
+				
+				char str[1024];
+				sprintf(str, "overallweightdistribution_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
+			 	read.open(str,fstream::app);
+		read <<epoch<<", "<<recordidx;
+			 	
+										for (int j = 0; j  < param->nHide; j++) {
+					for (int k = 0; k < param->nInput; k++) {
+						read<<", "<<weight1[j][k];
+					}
+			}
+						
+						for (int j = 0; j < param->nOutput; j++) {
+					for (int k = 0; k < param->nHide; k++) {
+						read<<", "<<weight2[j][k];
+					}
+						}
+		read<<endl;
+		
+		
+		/*sparsity check (completed) */ 
+		
+		// weight -0.0001 < <0.0001
+	
+		fstream read_sparsity;
+				
+		char str_sparsity[1024];
+		sprintf(str_sparsity, "sparsity_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
+		read_sparsity.open(str_sparsity,fstream::app);
+		IHsparsity = 0;
+		HOsparsity = 0;
+				
+		for (int j = 0; j  < param->nHide; j++) {
+			for (int k = 0; k < param->nInput; k++) {
+				if(weight1[j][k]>-0.01 && weight1[j][k]<0.01)
+				IHsparsity++;
+						
+			}
+		}
+						
+		for (int j = 0; j < param->nOutput; j++) {
+			for (int k = 0; k < param->nHide; k++) {
+				if(weight2[j][k]>-0.01 && weight2[j][k]<0.01)
+				HOsparsity++;
+			}
+		}
+			read_sparsity <<epoch<<", "<<recordidx<<", "<<IHsparsity<<", "<<HOsparsity<<endl;
+		
+		
+		/*weight location composition check (completed) */
+
+					
+	 	// location0
+		// location1
+		// location2
+		// location3 
+		// -> distribution check
+
+		fstream read1;
+		fstream read2;
+		fstream read3;
+		fstream read4;
+				
+		char str1[1024];
+		sprintf(str1, "location0weightdistribution_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
+		char str2[1024];
+		sprintf(str2, "location1weightdistribution_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
+		char str3[1024];
+		sprintf(str3, "location2weightdistribution_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
+		char str4[1024];
+		sprintf(str4, "location3weightdistribution_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
+		
+		
+		read1.open(str1,fstream::app);
+		read2.open(str2,fstream::app);
+		read3.open(str3,fstream::app);
+		read4.open(str4,fstream::app);
+		IHsparsity = 0;
+		HOsparsity = 0;
+		read1 <<epoch<<", "<<recordidx;
+		read2 <<epoch<<", "<<recordidx;
+		read3 <<epoch<<", "<<recordidx;
+		read4 <<epoch<<", "<<recordidx;
+		
+							for (int j = 0; j  < param->nHide; j++) {
+					for (int k = 0; k < param->nInput; k++) {
+						if (static_cast<RealDevice*>(arrayIH->cell[j][k])->location==0){
+						read1<<	", "<<weight1[j][k];
+						}
+						else
+						{
+						read1<<", "<<1000000;		
+						}
+						if (static_cast<RealDevice*>(arrayIH->cell[j][k])->location==1){
+						read2<<	", "<<weight1[j][k];
+						}
+						else
+						{
+						read2<<", "<<1000000;				
+						}
+						if (static_cast<RealDevice*>(arrayIH->cell[j][k])->location==2){
+						read3<<	", "<<weight1[j][k];
+						}
+						else
+						{
+						read3<<", "<<1000000;			
+						}
+						if (static_cast<RealDevice*>(arrayIH->cell[j][k])->location==3){
+						read4<<	", "<<weight1[j][k];
+						}
+						else
+						{
+						read4<<", "<<1000000;		
+						}
+						
+					}
+			}
+
+						
+						for (int j = 0; j < param->nOutput; j++) {
+					for (int k = 0; k < param->nHide; k++) {
+						if (static_cast<RealDevice*>(arrayHO->cell[j][k])->location==0){
+						read1<<	", "<<weight2[j][k];
+						}
+						else
+						{
+						read1<<", "<<1000000;		
+						}
+						if (static_cast<RealDevice*>(arrayHO->cell[j][k])->location==1){
+						read2<<	", "<<weight2[j][k];
+						}
+						else
+						{
+						read2<<", "<<1000000;				
+						}
+						if (static_cast<RealDevice*>(arrayHO->cell[j][k])->location==2){
+						read3<<	", "<<weight2[j][k];
+						}
+						else
+						{
+						read3<<", "<<1000000;			
+						}
+						if (static_cast<RealDevice*>(arrayHO->cell[j][k])->location==3){
+						read4<<	", "<<weight2[j][k];
+						}
+						else
+						{
+						read4<<", "<<1000000;		
+						}
+						
+					}
+						}
+		
+		
+		
+				
+		read1<<endl;
+		read2<<endl;
+		read3<<endl;
+		read4<<endl;
+		
+		///////////////////////////
+		
+		
+			}			
 			
-						if(param -> WeightTrack){
-							int epoch = int(iteration/8000)+1;
+			
+			
+			if(param -> WeightTrack){
+				int epoch = int(iteration/8000)+1;
 				if(iteration % param -> WeightTrackPeriod == param -> WeightTrackPeriod -1){
 				double averageGpIH=0;
 				double count1=0;
