@@ -1664,7 +1664,7 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 				
 		for (int j = 0; j  < param->nHide; j++) {
 			for (int k = 0; k < param->nInput; k++) {
-				if(weight1[j][k]>-0.01 && weight1[j][k]<0.01)
+				if(weight1[j][k]>-0.2 && weight1[j][k]<0.2)
 				IHsparsity++;
 						
 			}
@@ -1672,7 +1672,7 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 						
 		for (int j = 0; j < param->nOutput; j++) {
 			for (int k = 0; k < param->nHide; k++) {
-				if(weight2[j][k]>-0.01 && weight2[j][k]<0.01)
+				if(weight2[j][k]>-0.2 && weight2[j][k]<0.2)
 				HOsparsity++;
 			}
 		}
