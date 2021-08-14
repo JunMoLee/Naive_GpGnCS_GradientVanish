@@ -1595,12 +1595,13 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 		int recordidx = iteration / param ->G_Period;
 		fstream read1;
 		fstream read2;
-				
+			
 		char str1[1024];
 		sprintf(str1, "gradientIH_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
 		char str2[1024];
 		sprintf(str2, "gradientHO_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
-		
+		read1.open(str1,fstream::app);	
+		read2.open(str2,fstream::app);
 		read1<<epoch<<", "<<recordidx;
 		read2<<epoch<<", "<<recordidx;
 			for (int j = 0; j  < param->nHide; j++) {
