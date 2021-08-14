@@ -74,7 +74,8 @@ Param::Param() {
 	c2cvariation=0;
 	LocationTrack=0;
 	LocationTrackPeriod=200;
-	
+	G_Period = 200;
+	G_L_Period = 8000;
 	Gth1 = -1;
 	Gth2 = 9;
 
