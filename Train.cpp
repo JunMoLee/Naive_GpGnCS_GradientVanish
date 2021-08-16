@@ -1692,6 +1692,10 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 		fstream read2;
 		fstream read3;
 		fstream read4;
+		fstream read5;
+		fstream read6;
+		fstream read7;
+		fstream read8;
 				
 		char str1[1024];
 		sprintf(str1, "location0weightdistribution_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
@@ -1702,47 +1706,73 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 		char str4[1024];
 		sprintf(str4, "location3weightdistribution_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
 		
-		
+		char str5[1024];
+		sprintf(str1, "location0GpGn_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
+		char str6[1024];
+		sprintf(str2, "location1GpGn_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
+		char str7[1024];
+		sprintf(str3, "location2GpGn_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
+		char str8[1024];
+		sprintf(str4, "location3GpGn_NL_%.2f_%.2f_Gth_%.2f_LR_%.2f_revLR_%.2f_%d_%d.csv" ,NL_LTP_Gp, NL_LTD_Gp, Gth1, LA, revlr, reverseperiod, refperiod);
+				
 		read1.open(str1,fstream::app);
 		read2.open(str2,fstream::app);
 		read3.open(str3,fstream::app);
 		read4.open(str4,fstream::app);
+		read5.open(str5,fstream::app);
+		read6.open(str6,fstream::app);
+		read7.open(str7,fstream::app);
+		read8.open(str8,fstream::app);
+				
 		IHsparsity = 0;
 		HOsparsity = 0;
 		read1 <<epoch<<", "<<recordidx;
 		read2 <<epoch<<", "<<recordidx;
 		read3 <<epoch<<", "<<recordidx;
 		read4 <<epoch<<", "<<recordidx;
+		read5 <<epoch<<", "<<recordidx;
+		read6 <<epoch<<", "<<recordidx;
+		read7 <<epoch<<", "<<recordidx;
+		read8 <<epoch<<", "<<recordidx;
+		
 		
 							for (int j = 0; j  < param->nHide; j++) {
 					for (int k = 0; k < param->nInput; k++) {
 						if (static_cast<RealDevice*>(arrayIH->cell[j][k])->location==0){
 						read1<<	", "<<weight1[j][k];
+						read5<<	", "<<static_cast<RealDevice*>(arrayIH->cell[j][k])->conductanceGp<<", "<<static_cast<RealDevice*>(arrayIH->cell[j][k])->conductanceGn;
 						}
 						else
 						{
-						read1<<", "<<1000000;		
+						read1<<", "<<1000000;	
+						read5<<", "<<1000000<<", "<<1000000;	
 						}
 						if (static_cast<RealDevice*>(arrayIH->cell[j][k])->location==1){
 						read2<<	", "<<weight1[j][k];
+						read6<<	", "<<static_cast<RealDevice*>(arrayIH->cell[j][k])->conductanceGp<<", "<<static_cast<RealDevice*>(arrayIH->cell[j][k])->conductanceGn;
 						}
 						else
 						{
-						read2<<", "<<1000000;				
+						read2<<", "<<1000000;
+						read6<<", "<<1000000<<", "<<1000000;
 						}
 						if (static_cast<RealDevice*>(arrayIH->cell[j][k])->location==2){
 						read3<<	", "<<weight1[j][k];
+						read7<<	", "<<static_cast<RealDevice*>(arrayIH->cell[j][k])->conductanceGp<<", "<<static_cast<RealDevice*>(arrayIH->cell[j][k])->conductanceGn;
 						}
 						else
 						{
-						read3<<", "<<1000000;			
+						read3<<", "<<1000000;		
+						read7<<", "<<1000000<<", "<<1000000;
 						}
 						if (static_cast<RealDevice*>(arrayIH->cell[j][k])->location==3){
 						read4<<	", "<<weight1[j][k];
+						read8<<	", "<<static_cast<RealDevice*>(arrayIH->cell[j][k])->conductanceGp<<", "<<static_cast<RealDevice*>(arrayIH->cell[j][k])->conductanceGn;
 						}
 						else
 						{
-						read4<<", "<<1000000;		
+						read4<<", "<<1000000;
+						read8<<", "<<1000000<<", "<<1000000;
 						}
 						
 					}
@@ -1753,31 +1783,40 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 					for (int k = 0; k < param->nHide; k++) {
 						if (static_cast<RealDevice*>(arrayHO->cell[j][k])->location==0){
 						read1<<	", "<<weight2[j][k];
+						read5<<	", "<<static_cast<RealDevice*>(arrayHO->cell[j][k])->conductanceGp<<", "<<static_cast<RealDevice*>(arrayHO->cell[j][k])->conductanceGn;
 						}
 						else
 						{
-						read1<<", "<<1000000;		
+						read1<<", "<<1000000;
+						read5<<", "<<1000000<<", "<<1000000;
 						}
 						if (static_cast<RealDevice*>(arrayHO->cell[j][k])->location==1){
 						read2<<	", "<<weight2[j][k];
+						read6<<	", "<<static_cast<RealDevice*>(arrayHO->cell[j][k])->conductanceGp<<", "<<static_cast<RealDevice*>(arrayHO->cell[j][k])->conductanceGn;
 						}
 						else
 						{
-						read2<<", "<<1000000;				
+						read2<<", "<<1000000;	
+						read6<<", "<<1000000<<", "<<1000000;
 						}
 						if (static_cast<RealDevice*>(arrayHO->cell[j][k])->location==2){
 						read3<<	", "<<weight2[j][k];
+						read7<<	", "<<static_cast<RealDevice*>(arrayHO->cell[j][k])->conductanceGp<<", "<<static_cast<RealDevice*>(arrayHO->cell[j][k])->conductanceGn;
 						}
 						else
 						{
-						read3<<", "<<1000000;			
+						read3<<", "<<1000000;
+						read7<<", "<<1000000<<", "<<1000000;
+						
 						}
 						if (static_cast<RealDevice*>(arrayHO->cell[j][k])->location==3){
 						read4<<	", "<<weight2[j][k];
+						read8<<	", "<<static_cast<RealDevice*>(arrayHO->cell[j][k])->conductanceGp<<", "<<static_cast<RealDevice*>(arrayHO->cell[j][k])->conductanceGn;
 						}
 						else
 						{
-						read4<<", "<<1000000;		
+						read4<<", "<<1000000;	
+						read8<<", "<<1000000<<", "<<1000000;
 						}
 						
 					}
